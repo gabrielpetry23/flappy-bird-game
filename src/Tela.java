@@ -14,6 +14,8 @@ public class Tela extends JPanel implements ActionListener {
     private Image tuboBaixoImg;
 
     private Bird bird;
+    private int velocityY = -6;
+    private int gravity = 1;
 
     private Timer timer;
 
@@ -38,11 +40,18 @@ public class Tela extends JPanel implements ActionListener {
     public void desenhar (Graphics g) {
         //ele vai printando isso no tempo botei no timer (60f/s)
         g.drawImage(background, 0, 0, larguraTela, alturaTela, null);
-        g.drawImage(bird.getImg(), bird.getBirdX(), bird.getBirdY(), bird.getLarguraBird(), bird.getAlturaBird(), null);
+        g.drawImage(bird.img, bird.eixoX, bird.eixoY, bird.largura, bird.altura, null);
+    }
+
+    public void pular () {
+        velocityY += gravity;
+        bird.eixoY += velocityY; 
+        bird.eixoY = Math.max(bird.eixoY, 0); //pra não ultrapassar topo da tela
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        pular();
         repaint();
     }
 }
