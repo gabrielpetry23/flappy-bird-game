@@ -15,5 +15,6 @@ public class App extends JFrame  {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
         setVisible(true);
+        telaJogo.requestFocus();
     }
 }
