@@ -13,12 +13,19 @@ public class Tela extends JPanel implements ActionListener, KeyListener {
     private Image tuboCimaImg;
     private Image tuboBaixoImg;
 
+    private int tuboX = larguraTela;
+    private int tuboY = 0;
+    private int larguraTubo = 64;
+    private int alturaTubo = 512;
+
     private Bird bird;
+
     private int velocityX = -4; //movimentação tubo, dando a impressão que bird ta andando para direita
     private int velocityY = 0; //movimentação bird
     private int gravity = 1;
 
     ArrayList<Tubo> tubos;
+    Random random = new Random();
 
     private Timer timerJogo;
     private Timer timerTubos;
@@ -76,9 +83,15 @@ public class Tela extends JPanel implements ActionListener, KeyListener {
     }
 
     public void addTubos () {
+        int randomTuboY = (int)  ((tuboY - (alturaTubo/4)) - (Math.random()*(alturaTubo/2))); //1/4 3/4 alturaTubo
+        int espacoEntreTubos = alturaTela/4;
         Tubo tuboCima = new Tubo(tuboCimaImg);
+        tuboCima.eixoY = randomTuboY;
         tubos.add(tuboCima);
-        //Tubo tuboBaixo = new Tubo(tuboBaixoImg);
+
+        Tubo tuboBaixo = new Tubo(tuboBaixoImg);
+        tuboBaixo.eixoY = tuboCima.eixoY + alturaTubo + espacoEntreTubos;
+        tubos.add(tuboBaixo);
     }
 
     @Override

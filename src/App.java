@@ -9,12 +9,11 @@ public class App extends JFrame  {
         Tela telaJogo = new Tela();
         add(telaJogo);
         setTitle("FlappyBird");
-        setVisible(true);
-        setLocationRelativeTo(null);
+        //setLocationRelativeTo(null); // Centralizar o JFrame
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        pack();
-        setVisible(true);
+        pack(); // Ajustar o tamanho do JFrame
         telaJogo.requestFocus();
+        setVisible(true);
     }
 }
