@@ -18,6 +18,11 @@ public class Tela extends JPanel implements ActionListener, KeyListener {
     private int larguraTubo = 64;
     private int alturaTubo = 512;
 
+    private int birdX = larguraTela / 8;
+    private int birdY = alturaTela / 2;
+    private int larguraBird = 34;
+    private int alturaBird = 24;
+
     private Bird bird;
 
     private int velocityX = -4; //movimentação tubo, dando a impressão que bird ta andando para direita
@@ -30,6 +35,7 @@ public class Tela extends JPanel implements ActionListener, KeyListener {
     private Timer timerJogo;
     private Timer timerTubos;
     private boolean gameOver = false;
+    double score = 0;
 
     Tela () {
         setPreferredSize(new Dimension(larguraTela, alturaTela));
@@ -62,13 +68,23 @@ public class Tela extends JPanel implements ActionListener, KeyListener {
     public void desenhar  (Graphics g) {
         //ele vai printando isso no tempo botei no timer (60f/s)
         g.drawImage(background, 0, 0, larguraTela, alturaTela, null);
-        g.drawImage(bird.img, bird.eixoX, bird.eixoY, bird.largura, bird.altura, null);
-        //desenhar tubos
-        for (int i = 0 ; i < tubos.size() ; i++) {
-            Tubo tubo = tubos.get(i);
-            g.drawImage(tubo.img, tubo.eixoX, tubo.eixoY, tubo.largura, tubo.altura, null);
+        if (!gameOver) {
+            g.drawImage(bird.img, bird.eixoX, bird.eixoY, bird.largura, bird.altura, null);
+            //Tubos
+            for (int i = 0 ; i < tubos.size() ; i++) {
+                Tubo tubo = tubos.get(i);
+                g.drawImage(tubo.img, tubo.eixoX, tubo.eixoY, tubo.largura, tubo.altura, null);
+            }
         }
 
+        //Score
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.PLAIN, 32));
+        if (gameOver) {
+            g.drawString("Game Over: " +String.valueOf((int) score), larguraTela / 2/2, alturaTela/2);
+        } else {
+            g.drawString(String.valueOf((int) score), 10, 35);
+        }
     }
 
     public void pular () {
@@ -80,6 +96,12 @@ public class Tela extends JPanel implements ActionListener, KeyListener {
         for (int i = 0 ; i < tubos.size() ; i++) {
             Tubo tubo = tubos.get(i);
             tubo.eixoX += velocityX; //movendo para esquerda
+
+            if (!tubo.passou && bird.eixoX > tubo.eixoX + tubo.largura) {
+                tubo.passou = true;
+                score += 0.5; //0.5 pois tem 2 tubos
+            }
+
             if (encostouTubo(bird, tubo)) {
                 gameOver = true;
             }
@@ -126,6 +148,15 @@ public class Tela extends JPanel implements ActionListener, KeyListener {
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
             velocityY = -8;
+            if (gameOver) {
+                bird.eixoY = birdY;
+                velocityY = 0;
+                tubos.clear();
+                score = 0;
+                gameOver = false;
+                timerJogo.start();
+                timerTubos.start();
+            }
         }
     }
 
