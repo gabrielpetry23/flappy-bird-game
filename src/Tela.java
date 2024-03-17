@@ -29,6 +29,7 @@ public class Tela extends JPanel implements ActionListener, KeyListener {
 
     private Timer timerJogo;
     private Timer timerTubos;
+    private boolean gameOver = false;
 
     Tela () {
         setPreferredSize(new Dimension(larguraTela, alturaTela));
@@ -79,7 +80,24 @@ public class Tela extends JPanel implements ActionListener, KeyListener {
         for (int i = 0 ; i < tubos.size() ; i++) {
             Tubo tubo = tubos.get(i);
             tubo.eixoX += velocityX; //movendo para esquerda
+            if (encostouTubo(bird, tubo)) {
+                gameOver = true;
+            }
         }
+        limiteCair();
+    }
+
+    public void limiteCair() {
+        if (bird.eixoY > alturaTela) {
+            gameOver = true;
+        }
+    }
+
+    public boolean encostouTubo (Bird b, Tubo t) {
+        return b.eixoX < t.eixoX + t.largura && 
+        b.eixoX + b.largura > t.eixoX && 
+        b.eixoY < t.eixoY + t.altura &&
+        b.eixoY + b.altura > t.eixoY;
     }
 
     public void addTubos () {
@@ -98,6 +116,10 @@ public class Tela extends JPanel implements ActionListener, KeyListener {
     public void actionPerformed(ActionEvent e) {
         pular();
         repaint();
+        if (gameOver) {
+            timerTubos.stop();
+            timerJogo.stop();
+        }
     }
 
     @Override
